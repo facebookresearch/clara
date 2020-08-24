@@ -17,7 +17,7 @@ An implementation of the Gibbs sampler for the model (together with simulators t
 
 We can generate a dataset with 1000 items with the true prevalence `theta = [0.8, 0.2]` and all labelers share the same confusion matrix `psi = [[0.9, 0.1], [0.05, 0.95]]` as follow:
 
-```python
+``` python
 from simulator import generate_dataset_tiebreaking
 df = generate_dataset_tiebreaking(
     dataset_id=0,
@@ -29,17 +29,17 @@ df = generate_dataset_tiebreaking(
 
 The simulated data will look like:
 
-dataset | id | labelers | ratings | true_rating
-  :---: | -- |     ---: |    ---: |    :---:
-0|0_995|[0, 0]|[0, 0]|0
-0|0_996|[0, 0]|[0, 0]|0
-0|0_997|[0, 0, 0]|[0, 1, 0]|0
-0|0_998|[0, 0]|[0, 0]|0
-0|0_999|[0, 0]|[0, 0]|0
+| dataset | id    |  labelers |   ratings | true_rating |
+|:-------:|-------|----------:|----------:|:-----------:|
+|    0    | 0_995 |    [0, 0] |    [0, 0] |      0      |
+|    0    | 0_996 |    [0, 0] |    [0, 0] |      0      |
+|    0    | 0_997 | [0, 0, 0] | [0, 1, 0] |      0      |
+|    0    | 0_998 |    [0, 0] |    [0, 0] |      0      |
+|    0    | 0_999 |    [0, 0] |    [0, 0] |      0      |
 
 ### Generate data with classifier scores
 
-```python
+``` python
 from simulator import generate_dataset_tiebreaking_with_scores
 df = generate_dataset_tiebreaking_with_scores(
     dataset_id=1,
@@ -55,30 +55,32 @@ df = generate_dataset_tiebreaking_with_scores(
 
 To fit a CLARA model with a single confusion matrix shared across all labelers
 
-```python
+``` python
 model = ClaraGibbs(burn_in=2000, num_samples=1000, sample_lag=3)
 model.fit(A=1, R=2, ratings=np.array(df.ratings))
 ```
 
 ### Estimate the prevalence
 
-```python
+``` python
 model.get_prevalence()
 ```
 
 ### Estimate the confusion matrix
 
-```python
+``` python
 model.get_confusion_matrix(labeler_id=0)
 ```
 
 ## Installation
 
 **Installation Requirements**
-- Python >= 3.6
-- numpy
-- pandas
-- scipy
+
+* Python >= 3.6
+* numpy
+* pandas
+* scipy
 
 ## License
+
 You may find out more about the license [here](LICENSE).
