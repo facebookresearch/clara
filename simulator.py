@@ -110,6 +110,31 @@ def generate_dataset_tiebreaking_with_scores(
     return df
 
 
+def generate_labeler_confusion_matrix(num_labelers: int, psi_mean: np.array,
+                                      psi_std: np.array):
+    '''
+    Function to generate a seperate confusion matrix for each labeler
+    Args:
+        num_labelers: number of different confusion matrix
+        psi_mean: mean value of true positive rate and true negative rate
+        psi_std: standard deviation of true positive rate and true negative rate
+    Return: a list of 2x2 confusion matrix with length equals to num_labelers
+    '''
+    num_classes = 2
+    psi = np.zeros((num_labelers, num_classes, num_classes), dtype=float)
+    for i in range(num_labelers):
+        for j in range(0, num_classes):
+            # Generate true positive/negative probability between 0.5 and 1.0
+            psi[i][j][j] = min(
+                max(np.random.normal(psi_mean[j], psi_std[j]), 0.5), 1.0)
+
+            # Fill in false positive/negative value as needed
+            for k in range(num_classes):
+                if j != k:
+                    psi[i][j][k] = 1.0 - psi[i][j][j]
+    return psi
+
+
 def generate_dataset_tiebreaking_different_labeler_cm(
     dataset_id: int, theta: np.array, psi: np.array, num_items: int
 ) -> pd.DataFrame:
